@@ -1,0 +1,28 @@
+sudo: required
+
+services:
+    - docker
+
+before_install:
+    - docker build -t dharmendra10723/react-test -f ./client/Dockerfile.dev ./client
+
+scripts:
+    # no need to add -- --coverage
+    - docker run -e CI=true dharmendra10723/react-test npm run test -- --coverage
+
+after_access:
+    - docker build -t dharmendra10723/multi-client -f ./client/Dockerfile ./client
+    - docker build -t dharmendra10723/multi-server -f ./server/Dockerfile ./server
+    - docker build -t dharmendra10723/multi-worker -f ./worker/Dockerfile ./worker
+    - docker build -t dharmendra10723/multi-nginx -f ./nginx/Dockerfile ./nginx
+    # login to docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # push above images to dockerhub
+    - docker push dharmendra10723/multi-client
+    - docker push dharmendra10723/multi-server
+    - docker push dharmendra10723/multi-worker
+    - docker push dharmendra10723/multi-nginx
+
+
+
+
