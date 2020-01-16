@@ -10,7 +10,7 @@ scripts:
     # no need to add -- --coverage
     - docker run -e CI=true dharmendra10723/react-test npm run test -- --coverage
 
-after_access:
+after_success:
     - docker build -t dharmendra10723/multi-client -f ./client/Dockerfile ./client
     - docker build -t dharmendra10723/multi-server -f ./server/Dockerfile ./server
     - docker build -t dharmendra10723/multi-worker -f ./worker/Dockerfile ./worker
