@@ -9,18 +9,27 @@
         "memory": 128
       },
       {
+        "name": "redis",
+        "image": "redis",
+        "hostname": "redis",
+        "essential": false,
+        "memory": 128
+      },
+      {
         "name": "server",
         "image": "dharmendra/multi-server",
         "hostname": "api",
         "essential": false,
-        "memory": 128
+        "memory": 128,
+        "links": ["redis"]
       },
       {
         "name": "worker",
         "image": "dharmendra/multi-worker",
         "hostname": "worker",
         "essential": false,
-        "memory": 128
+        "memory": 128,
+        "links": ["redis"]
       },
       {
         "name": "nginx",
