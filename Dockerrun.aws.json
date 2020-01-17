@@ -3,7 +3,7 @@
     "containerDefinitions": [
       {
         "name": "client",
-        "image": "dharmendra/multi-client",
+        "image": "dharmendra10723/multi-client",
         "hostname": "client",
         "essential": false,
         "memory": 128
@@ -17,7 +17,7 @@
       },
       {
         "name": "server",
-        "image": "dharmendra/multi-server",
+        "image": "dharmendra10723/multi-server",
         "hostname": "api",
         "essential": false,
         "memory": 128,
@@ -25,7 +25,7 @@
       },
       {
         "name": "worker",
-        "image": "dharmendra/multi-worker",
+        "image": "dharmendra10723/multi-worker",
         "hostname": "worker",
         "essential": false,
         "memory": 128,
@@ -33,7 +33,7 @@
       },
       {
         "name": "nginx",
-        "image": "dharmendra/multi-nginx",
+        "image": "dharmendra10723/multi-nginx",
         "hostname": "nginx",
         "essential": true,
         "portMappings": [
