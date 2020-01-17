@@ -5,27 +5,31 @@
         "name": "client",
         "image": "dharmendra/multi-client",
         "hostname": "client",
-        "essential": false
+        "essential": false,
+        "memory": 128
     },
     {
         "name": "server",
         "image": "dharmendra/multi-server",
         "hostname": "api",
         "essential": false,
-        "links": ["redis"]
+        "links": ["redis"],
+        "memory": 128
     },
     {
         "name": "redis",
         "image": "redis",
         "hostname": "redis",
-        "essential": false
+        "essential": false,
+        "memory": 128
     },
     {
         "name": "worker",
         "image": "dharmendra/multi-worker",
         "hostname": "worker",
         "essential": false,
-        "links": [ "redis"]
+        "links": [ "redis"],
+        "memory": 128
     },
     {
         "name": "nginx",
@@ -38,7 +42,8 @@
                 "containerPort":80
             }
         ],
-        "links": [ "server", "client"]
+        "links": [ "server", "client"],
+        "memory": 128
     }
     ]
 }
