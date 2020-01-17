@@ -1,0 +1,44 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+    {
+        "name": "client",
+        "image": "dharmendra/multi-client",
+        "hostname": "client",
+        "essential": false
+    },
+    {
+        "name": "server",
+        "image": "dharmendra/multi-server",
+        "hostname": "api",
+        "essential": false,
+        "links": ["redis"]
+    },
+    {
+        "name": "redis",
+        "image": "redis",
+        "hostname": "redis",
+        "essential": false
+    },
+    {
+        "name": "worker",
+        "image": "dharmendra/multi-worker",
+        "hostname": "worker",
+        "essential": false,
+        "links": [ "redis"]
+    },
+    {
+        "name": "nginx",
+        "image": "dharmendra/multi-nginx",
+        "hostname": "nginx",
+        "essential": true,
+        "portMappings": [
+            {
+                "hostPort":80,
+                "containerPort":80
+            }
+        ],
+        "links": [ "server", "client"]
+    }
+    ]
+}
