@@ -21,4 +21,4 @@ Deploying multiple docker containers application using Travis CI on AWS Elastic 
 
 ## App Screenshot
 
-![app](images/sceenshot_app.png)
+![.](images/screenshot_app.png)
