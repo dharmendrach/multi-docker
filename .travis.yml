@@ -4,6 +4,11 @@ services:
     - docker
 
 before_install:
+    - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in service-account.json.enc -out service-account.json -d
+    - curl https://sdk.cloud.google.com | bash > /dev/null;
+    - source $HOME/google-cloud-sdk/path.bash.inc
+    - gcloud components update kubectl 
+    - gcloud auth activate-service-account --key-file service-account.json
     - docker build -t dharmendra10723/react-test -f ./client/Dockerfile.dev ./client
 
 scripts:
@@ -22,18 +27,6 @@ after_success:
     - docker push dharmendra10723/multi-server
     - docker push dharmendra10723/multi-worker
     - docker push dharmendra10723/multi-nginx
-
-deploy:
-    provider: elasticbeanstalk
-    region: 'us-east-1'
-    app: multi-docker
-    env: MultiDocker-env-1
-    bucket_name: elasticbeanstalk-us-east-1-999118253061
-    bucket_path: docker-multi
-    on:
-        branch: master
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
     
 
 
