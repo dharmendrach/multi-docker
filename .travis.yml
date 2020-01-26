@@ -39,4 +39,4 @@ deploy:
     provider: script 
     script: bash ./deploy.sh
     on:
-        branch: k8s-deployment
+        branch: master
