@@ -3,32 +3,41 @@ sudo: required
 services:
     - docker
 
+env:
+    global:
+        # git SHA for tagging purpose
+        - GIT_SHA=$(git rev-parse HEAD)
+        # disable prompt for user input
+        - CLOUD_CORE_DISABLE_PROMPTS=1
+
 before_install:
+    # decrypt service-account.json
     - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in service-account.json.enc -out service-account.json -d
+    # install GCP SDK
     - curl https://sdk.cloud.google.com | bash > /dev/null;
     - source $HOME/google-cloud-sdk/path.bash.inc
+    # install kubectl
     - gcloud components update kubectl 
+    # auth to google cloud
     - gcloud auth activate-service-account --key-file service-account.json
+    # set gcp project
+    - gcloud config set project multi-k8s-266308
+    # set zone 
+    - gcloud config set compute/zone asia-south1-a
+    # sepcify cluster 
+    - gcloud container clusters get-credentials multi-cluster 
+    # login to docker CLI
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # build test image
     - docker build -t dharmendra10723/react-test -f ./client/Dockerfile.dev ./client
 
 scripts:
     # no need to add -- --coverage
     - docker run -e CI=true dharmendra10723/react-test npm run test -- --coverage
 
-after_success:
-    - docker build -t dharmendra10723/multi-client -f ./client/Dockerfile ./client
-    - docker build -t dharmendra10723/multi-server -f ./server/Dockerfile ./server
-    - docker build -t dharmendra10723/multi-worker -f ./worker/Dockerfile ./worker
-    - docker build -t dharmendra10723/multi-nginx -f ./nginx/Dockerfile ./nginx
-    # login to docker CLI
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-    # push above images to dockerhub
-    - docker push dharmendra10723/multi-client
-    - docker push dharmendra10723/multi-server
-    - docker push dharmendra10723/multi-worker
-    - docker push dharmendra10723/multi-nginx
-    
-
-
-
-
+deploy:
+    # custom provider for deployment
+    provider: script 
+    script: bash ./deploy.sh
+    on:
+        branch: k8s-deployment
